@@ -20,7 +20,7 @@ public class Quantity {
     }
 
     // =========================
-    // UC4: EQUALITY (unchanged but improved)
+    // UC4/UC5: EQUALITY
     // =========================
     public boolean equals(Quantity other) {
 
@@ -33,14 +33,38 @@ public class Quantity {
     }
 
     // =========================
-    // 🚀 UC5: CONVERSION API
+    // UC5: CONVERSION
     // =========================
     public double convertTo(Unit targetUnit) {
 
-        // Step 1: convert to base (feet)
-        double baseValue = this.unit.toFeet(this.value);
+        double base = this.unit.toFeet(this.value);
+        return base / targetUnit.toFeet(1);
+    }
 
-        // Step 2: convert base → target
-        return baseValue / targetUnit.toFeet(1);
+    // =========================
+    // 🚀 UC6: ADDITION
+    // =========================
+    public Quantity add(Quantity other) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot add null quantity");
+        }
+
+        // Step 1: convert both to base unit (feet)
+        double thisFeet = this.unit.toFeet(this.value);
+        double otherFeet = other.unit.toFeet(other.value);
+
+        // Step 2: sum in base unit
+        double sumFeet = thisFeet + otherFeet;
+
+        // Step 3: convert back to FIRST operand unit
+        double resultValue = sumFeet / this.unit.toFeet(1);
+
+        return new Quantity(resultValue, this.unit);
+    }
+
+    @Override
+    public String toString() {
+        return value + " " + unit;
     }
 }
