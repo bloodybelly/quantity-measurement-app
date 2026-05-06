@@ -7,7 +7,7 @@ public class Quantity {
 
     public Quantity(double value, Unit unit) {
 
-        if (Double.isNaN(value)) {
+        if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Invalid numeric value");
         }
 
@@ -19,16 +19,28 @@ public class Quantity {
         this.unit = unit;
     }
 
+    // =========================
+    // UC4: EQUALITY (unchanged but improved)
+    // =========================
     public boolean equals(Quantity other) {
 
-        if (other == null) {
-            return false;
-        }
+        if (other == null) return false;
 
-        double thisInFeet = this.unit.toFeet(this.value);
-        double otherInFeet = other.unit.toFeet(other.value);
+        double thisFeet = this.unit.toFeet(this.value);
+        double otherFeet = other.unit.toFeet(other.value);
 
-        // 🔥 FIX: avoid double precision issues
-        return Math.abs(thisInFeet - otherInFeet) < 0.0001;
+        return Math.abs(thisFeet - otherFeet) < 0.0001;
+    }
+
+    // =========================
+    // 🚀 UC5: CONVERSION API
+    // =========================
+    public double convertTo(Unit targetUnit) {
+
+        // Step 1: convert to base (feet)
+        double baseValue = this.unit.toFeet(this.value);
+
+        // Step 2: convert base → target
+        return baseValue / targetUnit.toFeet(1);
     }
 }

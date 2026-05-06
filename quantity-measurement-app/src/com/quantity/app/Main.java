@@ -1,35 +1,30 @@
 package com.quantity.app;
 
-import com.quantity.model.QuantityWeight;
-import com.quantity.model.WeightUnit;
+import com.quantity.model.Quantity;
+import com.quantity.model.Unit;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // =========================
-        // EQUALITY TEST
-        // =========================
-        QuantityWeight w1 = new QuantityWeight(1000, WeightUnit.GRAM);
-        QuantityWeight w2 = new QuantityWeight(1, WeightUnit.KG);
-
-        System.out.println("1000g == 1kg: " + w1.equals(w2));
+        Quantity q1 = new Quantity(1, Unit.FEET);
 
         // =========================
-        // CONVERSION TEST
+        // CONVERSIONS
         // =========================
-        QuantityWeight w3 = new QuantityWeight(2, WeightUnit.KG);
-        System.out.println("2kg in grams: " + w3.convertTo(WeightUnit.GRAM));
+        System.out.println("1 ft → inches: " + q1.convertTo(Unit.INCH));
+        System.out.println("1 ft → yards: " + q1.convertTo(Unit.YARD));
+        System.out.println("1 ft → cm: " + q1.convertTo(Unit.CM));
+
+        Quantity q2 = new Quantity(12, Unit.INCH);
+        System.out.println("12 inch → feet: " + q2.convertTo(Unit.FEET));
 
         // =========================
-        // ADDITION TEST
+        // STILL SUPPORTS UC4
         // =========================
-        QuantityWeight w4 = new QuantityWeight(500, WeightUnit.GRAM);
-        QuantityWeight w5 = new QuantityWeight(1, WeightUnit.KG);
+        Quantity q3 = new Quantity(1, Unit.YARD);
+        Quantity q4 = new Quantity(3, Unit.FEET);
 
-        QuantityWeight result =
-                w4.add(w5, WeightUnit.KG);
-
-        System.out.println("Sum in kg: " + result);
+        System.out.println("1 yard == 3 feet: " + q3.equals(q4));
     }
 }
