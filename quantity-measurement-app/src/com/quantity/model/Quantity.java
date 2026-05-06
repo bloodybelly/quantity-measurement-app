@@ -2,15 +2,21 @@ package com.quantity.model;
 
 public class Quantity {
 
-    private double value; // value in feet
+    private double value;
+    private Unit unit;
 
-    public Quantity(double value) {
+    public Quantity(double value, Unit unit) {
 
         if (Double.isNaN(value)) {
             throw new IllegalArgumentException("Invalid numeric value");
         }
 
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
+
         this.value = value;
+        this.unit = unit;
     }
 
     public boolean equals(Quantity other) {
@@ -19,6 +25,9 @@ public class Quantity {
             return false;
         }
 
-        return this.value == other.value;
+        double thisInFeet = this.unit.toFeet(this.value);
+        double otherInFeet = other.unit.toFeet(other.value);
+
+        return thisInFeet == otherInFeet;
     }
 }
