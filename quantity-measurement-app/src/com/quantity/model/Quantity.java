@@ -20,53 +20,66 @@ public class Quantity<U extends IMeasurable> {
     }
 
     // =========================
-    // EQUALITY (UC10)
+    // BASE CONVERSION
+    // =========================
+    private double toBase() {
+        return unit.convertToBaseUnit(value);
+    }
+
+    private double fromBase(double baseValue, U targetUnit) {
+        return targetUnit.convertFromBaseUnit(baseValue);
+    }
+
+    // =========================
+    // EQUALITY (UC10+)
     // =========================
     public boolean equals(Quantity<U> other) {
 
         if (other == null) return false;
 
-        double thisBase = this.unit.convertToBaseUnit(this.value);
-        double otherBase = other.unit.convertToBaseUnit(other.value);
-
-        return Math.abs(thisBase - otherBase) < 0.0001;
+        return Math.abs(this.toBase() - other.toBase()) < 0.0001;
     }
 
     // =========================
-    // CONVERSION
-    // =========================
-    public double convertTo(U targetUnit) {
-
-        double base = this.unit.convertToBaseUnit(this.value);
-        return targetUnit.convertFromBaseUnit(base);
-    }
-
-    // =========================
-    // ADD (same unit result)
-    // =========================
-    public Quantity<U> add(Quantity<U> other) {
-
-        double sumBase =
-                this.unit.convertToBaseUnit(this.value) +
-                        other.unit.convertToBaseUnit(other.value);
-
-        double result = this.unit.convertFromBaseUnit(sumBase);
-
-        return new Quantity<>(result, this.unit);
-    }
-
-    // =========================
-    // ADD (target unit)
+    // ADDITION (UC10+)
     // =========================
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
 
-        double sumBase =
-                this.unit.convertToBaseUnit(this.value) +
-                        other.unit.convertToBaseUnit(other.value);
-
-        double result = targetUnit.convertFromBaseUnit(sumBase);
+        double resultBase = this.toBase() + other.toBase();
+        double result = fromBase(resultBase, targetUnit);
 
         return new Quantity<>(result, targetUnit);
+    }
+
+    // =========================
+    // 🚀 SUBTRACTION (UC12)
+    // =========================
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot subtract null");
+        }
+
+        double resultBase = this.toBase() - other.toBase();
+        double result = fromBase(resultBase, targetUnit);
+
+        return new Quantity<>(result, targetUnit);
+    }
+
+    // =========================
+    // 🚀 DIVISION (UC12)
+    // =========================
+    public double divide(Quantity<U> other) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot divide by null");
+        }
+
+        if (other.toBase() == 0) {
+            throw new ArithmeticException("Division by zero");
+        }
+
+        return this.toBase() / other.toBase();
     }
 
     @Override
