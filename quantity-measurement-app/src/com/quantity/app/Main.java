@@ -1,26 +1,35 @@
 package com.quantity.app;
 
-import com.quantity.model.Quantity;
-import com.quantity.model.Unit;
+import com.quantity.model.QuantityWeight;
+import com.quantity.model.WeightUnit;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        try {
-            // Same unit comparison
-            Quantity q1 = new Quantity(5, Unit.FEET);
-            Quantity q2 = new Quantity(5, Unit.FEET);
+        // =========================
+        // EQUALITY TEST
+        // =========================
+        QuantityWeight w1 = new QuantityWeight(1000, WeightUnit.GRAM);
+        QuantityWeight w2 = new QuantityWeight(1, WeightUnit.KG);
 
-            // Cross unit comparison
-            Quantity q3 = new Quantity(1, Unit.FEET);
-            Quantity q4 = new Quantity(12, Unit.INCH);
+        System.out.println("1000g == 1kg: " + w1.equals(w2));
 
-            System.out.println("5 ft == 5 ft: " + q1.equals(q2));
-            System.out.println("1 ft == 12 in: " + q3.equals(q4));
+        // =========================
+        // CONVERSION TEST
+        // =========================
+        QuantityWeight w3 = new QuantityWeight(2, WeightUnit.KG);
+        System.out.println("2kg in grams: " + w3.convertTo(WeightUnit.GRAM));
 
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // =========================
+        // ADDITION TEST
+        // =========================
+        QuantityWeight w4 = new QuantityWeight(500, WeightUnit.GRAM);
+        QuantityWeight w5 = new QuantityWeight(1, WeightUnit.KG);
+
+        QuantityWeight result =
+                w4.add(w5, WeightUnit.KG);
+
+        System.out.println("Sum in kg: " + result);
     }
 }

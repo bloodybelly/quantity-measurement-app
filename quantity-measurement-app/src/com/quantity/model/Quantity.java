@@ -28,6 +28,7 @@ public class Quantity {
         double thisInFeet = this.unit.toFeet(this.value);
         double otherInFeet = other.unit.toFeet(other.value);
 
-        return thisInFeet == otherInFeet;
+        // 🔥 FIX: avoid double precision issues
+        return Math.abs(thisInFeet - otherInFeet) < 0.0001;
     }
 }
