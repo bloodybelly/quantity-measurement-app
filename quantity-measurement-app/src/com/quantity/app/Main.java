@@ -1,33 +1,29 @@
 package com.quantity.app;
 
-import com.quantity.model.Quantity;
-
-import java.util.Scanner;
+import com.quantity.model.Feet;
+import com.quantity.model.Inch;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
-
         try {
-            System.out.print("Enter first value in feet: ");
-            double v1 = sc.nextDouble();
+            // Hardcoded values (as per UC)
+            Feet f1 = new Feet(5.0);
+            Feet f2 = new Feet(5.0);
 
-            System.out.print("Enter second value in feet: ");
-            double v2 = sc.nextDouble();
+            Inch i1 = new Inch(12.0);
+            Inch i2 = new Inch(12.0);
 
-            Quantity q1 = new Quantity(v1);
-            Quantity q2 = new Quantity(v2);
+            // Comparison
+            boolean feetEqual = f1.equals(f2);
+            boolean inchEqual = i1.equals(i2);
 
-            boolean result = q1.equals(q2);
-
-            System.out.println("Are equal? " + result);
+            System.out.println("Feet Equal: " + feetEqual);
+            System.out.println("Inch Equal: " + inchEqual);
 
         } catch (Exception e) {
-            System.out.println("Invalid input! Please enter numeric values.");
-        } finally {
-            sc.close();
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
