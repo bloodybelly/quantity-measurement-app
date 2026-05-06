@@ -1,14 +1,14 @@
 package com.quantity.model;
 
-public class Quantity {
+public class Quantity<U extends IMeasurable> {
 
-    private double value;
-    private Unit unit;
+    private final double value;
+    private final U unit;
 
-    public Quantity(double value, Unit unit) {
+    public Quantity(double value, U unit) {
 
         if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Invalid numeric value");
+            throw new IllegalArgumentException("Invalid value");
         }
 
         if (unit == null) {
@@ -20,47 +20,57 @@ public class Quantity {
     }
 
     // =========================
-    // UC4/UC5: EQUALITY
+    // EQUALITY (UC10)
     // =========================
-    public boolean equals(Quantity other) {
+    public boolean equals(Quantity<U> other) {
 
         if (other == null) return false;
 
-        double thisBase = this.unit.toBaseUnit(this.value);
-        double otherBase = other.unit.toBaseUnit(other.value);
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
         return Math.abs(thisBase - otherBase) < 0.0001;
     }
 
     // =========================
-    // UC5: CONVERSION
+    // CONVERSION
     // =========================
-    public double convertTo(Unit targetUnit) {
+    public double convertTo(U targetUnit) {
 
-        double base = this.unit.toBaseUnit(this.value);
-        return targetUnit.fromBaseUnit(base);
+        double base = this.unit.convertToBaseUnit(this.value);
+        return targetUnit.convertFromBaseUnit(base);
     }
 
     // =========================
-    // UC6/UC7: ADDITION
+    // ADD (same unit result)
     // =========================
-    public Quantity add(Quantity other, Unit targetUnit) {
-
-        if (other == null || targetUnit == null) {
-            throw new IllegalArgumentException("Invalid input");
-        }
+    public Quantity<U> add(Quantity<U> other) {
 
         double sumBase =
-                this.unit.toBaseUnit(this.value) +
-                        other.unit.toBaseUnit(other.value);
+                this.unit.convertToBaseUnit(this.value) +
+                        other.unit.convertToBaseUnit(other.value);
 
-        double result = targetUnit.fromBaseUnit(sumBase);
+        double result = this.unit.convertFromBaseUnit(sumBase);
 
-        return new Quantity(result, targetUnit);
+        return new Quantity<>(result, this.unit);
+    }
+
+    // =========================
+    // ADD (target unit)
+    // =========================
+    public Quantity<U> add(Quantity<U> other, U targetUnit) {
+
+        double sumBase =
+                this.unit.convertToBaseUnit(this.value) +
+                        other.unit.convertToBaseUnit(other.value);
+
+        double result = targetUnit.convertFromBaseUnit(sumBase);
+
+        return new Quantity<>(result, targetUnit);
     }
 
     @Override
     public String toString() {
-        return value + " " + unit;
+        return value + " " + unit.getUnitName();
     }
 }
