@@ -7,25 +7,38 @@ public class Main {
     public static void main(String[] args) {
 
         // =========================
-        // LENGTH
+        // VOLUME EQUALITY
         // =========================
-        Quantity<Unit> length1 = new Quantity<>(1, Unit.FEET);
-        Quantity<Unit> length2 = new Quantity<>(12, Unit.INCH);
+        Quantity<VolumeUnit> v1 =
+                new Quantity<>(1000, VolumeUnit.MILLILITRE);
 
-        System.out.println("Length equal: " + length1.equals(length2));
-        System.out.println("Convert: " + length1.convertTo(Unit.INCH));
+        Quantity<VolumeUnit> v2 =
+                new Quantity<>(1, VolumeUnit.LITRE);
 
-        System.out.println("Add: " +
-                length1.add(length2, Unit.YARD));
+        System.out.println("1000 mL == 1 L: " + v1.equals(v2));
 
         // =========================
-        // WEIGHT
+        // CONVERSION
         // =========================
-        Quantity<WeightUnit> w1 = new Quantity<>(1000, WeightUnit.GRAM);
-        Quantity<WeightUnit> w2 = new Quantity<>(1, WeightUnit.KG);
+        Quantity<VolumeUnit> v3 =
+                new Quantity<>(1, VolumeUnit.GALLON);
 
-        System.out.println("Weight equal: " + w1.equals(w2));
-        System.out.println("Add weight: " +
-                w1.add(w2, WeightUnit.KG));
+        System.out.println("1 gallon → litres: " +
+                v3.convertTo(VolumeUnit.LITRE));
+
+        // =========================
+        // ADDITION
+        // =========================
+        Quantity<VolumeUnit> v4 =
+                new Quantity<>(2, VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> v5 =
+                new Quantity<>(500, VolumeUnit.MILLILITRE);
+
+        System.out.println("Sum in litres: " +
+                v4.add(v5, VolumeUnit.LITRE));
+
+        System.out.println("Sum in gallons: " +
+                v4.add(v5, VolumeUnit.GALLON));
     }
 }
