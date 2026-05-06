@@ -7,13 +7,23 @@ public enum Unit {
     YARD(3.0),
     CM(0.0328084);
 
-    private final double toFeet;
+    private final double toFeetFactor;
 
-    Unit(double toFeet) {
-        this.toFeet = toFeet;
+    Unit(double toFeetFactor) {
+        this.toFeetFactor = toFeetFactor;
     }
 
-    public double toFeet(double value) {
-        return value * toFeet;
+    // =========================
+    // TO BASE UNIT (FEET)
+    // =========================
+    public double toBaseUnit(double value) {
+        return value * toFeetFactor;
+    }
+
+    // =========================
+    // FROM BASE UNIT (FEET → UNIT)
+    // =========================
+    public double fromBaseUnit(double baseValue) {
+        return baseValue / toFeetFactor;
     }
 }
