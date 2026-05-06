@@ -1,26 +1,23 @@
 package com.quantity.app;
 
-import com.quantity.model.Feet;
-import com.quantity.model.Inch;
+import com.quantity.model.Quantity;
+import com.quantity.model.Unit;
 
 public class Main {
 
     public static void main(String[] args) {
 
         try {
-            // Hardcoded values (as per UC)
-            Feet f1 = new Feet(5.0);
-            Feet f2 = new Feet(5.0);
+            // Same unit comparison
+            Quantity q1 = new Quantity(5, Unit.FEET);
+            Quantity q2 = new Quantity(5, Unit.FEET);
 
-            Inch i1 = new Inch(12.0);
-            Inch i2 = new Inch(12.0);
+            // Cross unit comparison
+            Quantity q3 = new Quantity(1, Unit.FEET);
+            Quantity q4 = new Quantity(12, Unit.INCH);
 
-            // Comparison
-            boolean feetEqual = f1.equals(f2);
-            boolean inchEqual = i1.equals(i2);
-
-            System.out.println("Feet Equal: " + feetEqual);
-            System.out.println("Inch Equal: " + inchEqual);
+            System.out.println("5 ft == 5 ft: " + q1.equals(q2));
+            System.out.println("1 ft == 12 in: " + q3.equals(q4));
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
