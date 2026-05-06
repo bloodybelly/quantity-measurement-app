@@ -42,7 +42,7 @@ public class Quantity {
     }
 
     // =========================
-    // 🚀 UC6: ADDITION
+    // UC6 (still supported internally)
     // =========================
     public Quantity add(Quantity other) {
 
@@ -50,17 +50,37 @@ public class Quantity {
             throw new IllegalArgumentException("Cannot add null quantity");
         }
 
-        // Step 1: convert both to base unit (feet)
-        double thisFeet = this.unit.toFeet(this.value);
-        double otherFeet = other.unit.toFeet(other.value);
+        double sumFeet =
+                this.unit.toFeet(this.value) +
+                        other.unit.toFeet(other.value);
 
-        // Step 2: sum in base unit
-        double sumFeet = thisFeet + otherFeet;
-
-        // Step 3: convert back to FIRST operand unit
         double resultValue = sumFeet / this.unit.toFeet(1);
 
         return new Quantity(resultValue, this.unit);
+    }
+
+    // =========================
+    // 🚀 UC7: ADD WITH TARGET UNIT
+    // =========================
+    public Quantity add(Quantity other, Unit targetUnit) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Second operand is null");
+        }
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit is null");
+        }
+
+        // Step 1: convert both to base (feet)
+        double sumFeet =
+                this.unit.toFeet(this.value) +
+                        other.unit.toFeet(other.value);
+
+        // Step 2: convert to target unit
+        double resultValue = sumFeet / targetUnit.toFeet(1);
+
+        return new Quantity(resultValue, targetUnit);
     }
 
     @Override
