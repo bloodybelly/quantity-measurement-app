@@ -26,10 +26,10 @@ public class Quantity {
 
         if (other == null) return false;
 
-        double thisFeet = this.unit.toFeet(this.value);
-        double otherFeet = other.unit.toFeet(other.value);
+        double thisBase = this.unit.toBaseUnit(this.value);
+        double otherBase = other.unit.toBaseUnit(other.value);
 
-        return Math.abs(thisFeet - otherFeet) < 0.0001;
+        return Math.abs(thisBase - otherBase) < 0.0001;
     }
 
     // =========================
@@ -37,50 +37,26 @@ public class Quantity {
     // =========================
     public double convertTo(Unit targetUnit) {
 
-        double base = this.unit.toFeet(this.value);
-        return base / targetUnit.toFeet(1);
+        double base = this.unit.toBaseUnit(this.value);
+        return targetUnit.fromBaseUnit(base);
     }
 
     // =========================
-    // UC6 (still supported internally)
-    // =========================
-    public Quantity add(Quantity other) {
-
-        if (other == null) {
-            throw new IllegalArgumentException("Cannot add null quantity");
-        }
-
-        double sumFeet =
-                this.unit.toFeet(this.value) +
-                        other.unit.toFeet(other.value);
-
-        double resultValue = sumFeet / this.unit.toFeet(1);
-
-        return new Quantity(resultValue, this.unit);
-    }
-
-    // =========================
-    // 🚀 UC7: ADD WITH TARGET UNIT
+    // UC6/UC7: ADDITION
     // =========================
     public Quantity add(Quantity other, Unit targetUnit) {
 
-        if (other == null) {
-            throw new IllegalArgumentException("Second operand is null");
+        if (other == null || targetUnit == null) {
+            throw new IllegalArgumentException("Invalid input");
         }
 
-        if (targetUnit == null) {
-            throw new IllegalArgumentException("Target unit is null");
-        }
+        double sumBase =
+                this.unit.toBaseUnit(this.value) +
+                        other.unit.toBaseUnit(other.value);
 
-        // Step 1: convert both to base (feet)
-        double sumFeet =
-                this.unit.toFeet(this.value) +
-                        other.unit.toFeet(other.value);
+        double result = targetUnit.fromBaseUnit(sumBase);
 
-        // Step 2: convert to target unit
-        double resultValue = sumFeet / targetUnit.toFeet(1);
-
-        return new Quantity(resultValue, targetUnit);
+        return new Quantity(result, targetUnit);
     }
 
     @Override
